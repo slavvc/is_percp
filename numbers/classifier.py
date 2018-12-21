@@ -44,11 +44,13 @@ def read_mnist():
 #model.add(keras.layers.Dense(10, activation='softmax'))
     
 model = keras.Sequential()
-model.add(keras.layers.Conv2D(5, kernel_size=5, input_shape=(28,28,1),
+model.add(keras.layers.Conv2D(10, kernel_size=3, input_shape=(28,28,1),
                               activation='hard_sigmoid'))
-model.add(keras.layers.Conv2D(3, kernel_size=3, activation='hard_sigmoid'))
+model.add(keras.layers.MaxPooling2D())
+model.add(keras.layers.Conv2D(10, kernel_size=3, activation='hard_sigmoid'))
 model.add(keras.layers.Flatten())
 model.add(keras.layers.Dense(10, activation='softmax'))
+#model.add(keras.layers.Dense(10, activation='sigmoid'))
 
 def store(fn):
     with open(fn, 'wt') as f:
@@ -63,8 +65,8 @@ def load(fn):
         model.set_weights(d)
 
 def train():
-#    sgd = keras.optimizers.SGD(lr=0.1, momentum=0.1)
-    model.compile(optimizer='adam', loss='categorical_crossentropy')
+    sgd = keras.optimizers.SGD(lr=0.1, momentum=0.1)
+    model.compile(optimizer=sgd, loss='categorical_crossentropy')
     data = read_mnist()
     return model.fit(data['train_X'], data['train_Y'], epochs=3)
     
